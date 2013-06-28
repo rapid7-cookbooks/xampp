@@ -1,5 +1,4 @@
-# XAMPP
-[![Build Status](https://secure.travis-ci.org/rapid7-cookbooks/xampp.png)](http://travis-ci.org/rapid7-cookbooks/xampp)
+# XAMPP [![Build Status](https://secure.travis-ci.org/rapid7-cookbooks/xampp.png)](http://travis-ci.org/rapid7-cookbooks/xampp)
 ## Description
 
 Installs and configures xampp and it's dependencies.

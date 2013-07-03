@@ -19,7 +19,7 @@ action :restart do
   new_resource.updated_by_last_action(@updated)
 end
 
-ectien :start do
+action :start do
   start
   new_resource.updated_by_last_action(@updated)
 end

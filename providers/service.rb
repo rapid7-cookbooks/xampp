@@ -14,9 +14,9 @@ end
 # start/stop.
 #
 # REVIEW: Should we just create two lampp_service new_resources for stop and start?
-action :restart { stop and start }
-action :start { start }
-action :stop { stop }
+action(:restart) { stop and start }
+action(:start) { start }
+action(:stop) { stop }
 
 # Helper Methods #
 def security

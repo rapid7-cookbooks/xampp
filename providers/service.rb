@@ -6,8 +6,6 @@ action :nothing do
   if new_resource.service.eql? 'security'
     security
   end
-
-  new_resource.updated_by_last_action(@updated)
 end
 
 # NOTE: These actions are simple because action :restart must be able to use
@@ -16,51 +14,49 @@ end
 # REVIEW: Should we just create two lampp_service new_resources for stop and start?
 action :restart do
   stop and start
-  new_resource.updated_by_last_action(@updated)
 end
 
 action :start do
   start
-  new_resource.updated_by_last_action(@updated)
 end
 
 action :stop do
   stop
-  new_resource.updated_by_last_action(@updated)
 end
 
 # Helper Methods #
 def security
   shellout!('service lampp security')
-  @updated = true
+
+  new_resource.update_by_last_action(true)
 end
 
 def start
   if valid_action? :start
     shellout!("service lampp start#{new_resource.service}")
-    @updated = true
+    new_resource.update_by_last_action(true)
     return true
   elsif new_resource.service.eql? 'security'
     return security
   end
 
-  @updated = false
+  new_resource.update_by_last_action(false)
 end
 
 def stop
   if valid_action? :stop
     shellout!("service lampp stop#{new_resource.service}")
-    @updated = true
+    new_resource.update_by_last_action(true)
     return true
   end
 
-  @updated = false
+  new_resource.update_by_last_action(false)
 end
 
 def valid_action?(action_name)
   services = %w{apache ftp mysql ssl}
 
-  if new_resource.services.eql?('security') && !action_name.eql?(:start)
+  if new_resource.service.eql?('security') && !action_name.eql?(:start)
     warning = <<-desc
       You can't use `action :#{action_name}` in a lampp_service[security] block.
     desc

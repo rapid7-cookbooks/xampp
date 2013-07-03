@@ -47,8 +47,6 @@ def stop
     shell_out!("service lampp stop#{new_resource.service}")
     new_resource.updated_by_last_action(true)
   end
-
-  new_resource.updated_by_last_action(false)
 end
 
 def valid_action?(action_name)

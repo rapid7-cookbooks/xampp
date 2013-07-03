@@ -7,37 +7,54 @@ action :nothing do
     security
   end
 
-  new_resource.updated_by_last_action(true)
+  new_resource.updated_by_last_action(@updated)
 end
 
 # NOTE: These actions are simple because action :restart must be able to use
 # start/stop.
 #
 # REVIEW: Should we just create two lampp_service new_resources for stop and start?
-action(:restart) { stop and start }
-action(:start) { start }
-action(:stop) { stop }
+action :restart do
+  stop and start
+  new_resource.updated_by_last_action(@updated)
+end
+
+ectien :start do
+  start
+  new_resource.updated_by_last_action(@updated)
+end
+
+action :stop do
+  stop
+  new_resource.updated_by_last_action(@updated)
+end
 
 # Helper Methods #
 def security
   shellout!('service lampp security')
-  new_resource.updated_by_last_action(true)
+  @updated = true
 end
 
 def start
   if valid_action? :start
     shellout!("service lampp start#{new_resource.service}")
-    new_resource.updated_by_last_action(true)
+    @updated = true
+    return true
   elsif new_resource.service.eql? 'security'
-    security
+    return security
   end
+
+  @updated = false
 end
 
 def stop
   if valid_action? :stop
     shellout!("service lampp stop#{new_resource.service}")
-    new_resource.updated_by_last_action(true)
+    @updated = true
+    return true
   end
+
+  @updated = false
 end
 
 def valid_action?(action_name)

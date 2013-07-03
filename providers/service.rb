@@ -1,4 +1,5 @@
 require 'chef/mixin/shell_out'
+include Chef::Mixin::ShellOut
 
 # NOTE: If a user specific lampp_service 'security' without a block it
 # should still start due to it's unique syntax.

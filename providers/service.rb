@@ -18,40 +18,37 @@ action :restart do
 end
 
 action :start do
-  start
+  success = start
+  new_resource.updated_by_last_action(success)
 end
 
 action :stop do
-  stop
+  success = stop
+  new_resource.updated_by_last_action(success)
 end
 
 # Helper Methods #
 def security
-  shellout!('service lampp security')
-
-  new_resource.update_by_last_action(true)
+  shell_out!('service lampp security')
+  new_resource.updated_by_last_action(true)
 end
 
 def start
   if valid_action? :start
-    shellout!("service lampp start#{new_resource.service}")
-    new_resource.update_by_last_action(true)
-    return true
+    shell_out!("service lampp start#{new_resource.service}")
+    new_resource.updated_by_last_action(true)
   elsif new_resource.service.eql? 'security'
-    return security
+    security
   end
-
-  new_resource.update_by_last_action(false)
 end
 
 def stop
   if valid_action? :stop
-    shellout!("service lampp stop#{new_resource.service}")
-    new_resource.update_by_last_action(true)
-    return true
+    shell_out!("service lampp stop#{new_resource.service}")
+    new_resource.updated_by_last_action(true)
   end
 
-  new_resource.update_by_last_action(false)
+  new_resource.updated_by_last_action(false)
 end
 
 def valid_action?(action_name)

@@ -13,6 +13,6 @@ class Default < Thor
 
   desc 'foodcritic', 'Lint Chef cookbooks'
   def foodcritic
-    Rake::Task['foodcritic'].execute
+    Rake::Task['foodcritic'].execute rescue exit(1)
   end
 end

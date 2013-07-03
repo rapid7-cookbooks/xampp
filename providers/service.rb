@@ -67,8 +67,11 @@ def valid_action?(action_name)
   end
 
   if warning
-    log warning { level :warn }
-    log "Valid lampp services are: #{services - 'security'}" { level :warn }
+    warning << " Valid lampp services are: #{services - 'security'}"
+
+    log warning do
+      level :warn
+    end
   end
 
   services.include? new_resource.service

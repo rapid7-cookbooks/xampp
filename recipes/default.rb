@@ -33,8 +33,8 @@ end
 
 version = File.read("#{node[:xampp][:dir]}/lampp/lib/VERSION").strip rescue nil
 
-remote_file "#{Chef::Config[:file_cache_path]}/#{node[:xampp][:tarball]}" do
-  action :create_if_missing
+tarball_path = "#{Chef::Config[:file_cache_path]}/#{node[:xampp][:tarball]}"
+remote_file tarball_path do
   source node[:xampp][:url]
   not_if { version.eql? node[:xampp][:version] }
 end
@@ -45,9 +45,7 @@ directory node[:xampp][:dir] do
   not_if { version.eql? node[:xampp][:version] }
 end
 
-tarball_path = "#{Chef::Config[:file_cache_path]}/#{node[:xampp][:tarball]}"
 execute 'unarchive xampp' do
-  user 'root'
   command "tar -xzf #{tarball_path} -C #{node[:xampp][:dir]}"
   not_if { version.eql? node[:xampp][:version] }
 end

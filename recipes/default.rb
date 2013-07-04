@@ -7,13 +7,15 @@
 # All Rights Reserved - Do Not Redistribute
 #
 
+# TODO: More code cleanup
+# TODO: Add support for Windows
 # REVIEW: Is apt the only package manager that needs to be updated?
 case node[:platform_family]
 when 'debian'
   include_recipe 'apt'
 end
 
-if architecture
+if node[:kernel][:machine].eql?('x86_64')
   case node[:platform_family]
   when 'arch'
     package 'lib32-glibc'
@@ -29,9 +31,7 @@ if architecture
   end
 end
 
-version = if File.exists?("#{node[:xampp][:dir]}/lampp/lib/VERSION")
-  File.read("#{node[:xampp][:dir]}/lampp/lib/VERSION").strip
-end
+version = File.read("#{node[:xampp][:dir]}/lampp/lib/VERSION").strip rescue nil
 
 remote_file "#{Chef::Config[:file_cache_path]}/#{node[:xampp][:tarball]}" do
   action :create_if_missing
@@ -39,16 +39,29 @@ remote_file "#{Chef::Config[:file_cache_path]}/#{node[:xampp][:tarball]}" do
   not_if { version.eql? node[:xampp][:version] }
 end
 
-bash 'install_xampp' do
-  user 'root'
-  cwd Chef::Config[:file_cache_path]
-  code <<-eos
-    rm -rf #{node[:xampp][:dir]}/lampp &&
-    tar -xzf #{node[:xampp][:tarball]} -C #{node[:xampp][:dir]} &&
-    #{node[:xampp][:dir]}/lampp/lampp restart &&
-    ln -s #{node[:xampp][:dir]}/lampp/lampp /etc/init.d/lampp &&
-    update-rc.d -f lampp defaults &&
-    chmod +x /etc/init.d/lampp
-  eos
+directory node[:xampp][:dir] do
+  action :delete
+  recursive true
   not_if { version.eql? node[:xampp][:version] }
+end
+
+tarball_path = "#{Chef::Config[:file_cache_path]}/#{node[:xampp][:tarball]}"
+execute 'unarchive xampp' do
+  user 'root'
+  command "tar -xzf #{tarball_path} -C #{node[:xampp][:dir]}"
+  not_if { version.eql? node[:xampp][:version] }
+end
+
+link '/etc/init.d/lampp' do
+  to "#{node[:xampp][:dir]}/lampp/lampp"
+end
+
+# REVIEW: Is it necessary to change the perms on the lampp executable?
+# chmod +x /etc/init.d/lampp
+
+service 'xampp' do
+  action [:enable, :start]
+
+  # NOTE: This is incorrect for windows.
+  service_name 'lampp'
 end

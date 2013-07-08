@@ -31,6 +31,10 @@ if node[:kernel][:machine].eql?('x86_64')
   end
 end
 
+# TODO: This is a hack
+chef_gem 'highline'
+gem_package 'highline'
+
 version = File.read("#{node[:xampp][:dir]}/lampp/lib/VERSION").strip rescue nil
 
 tarball_path = "#{Chef::Config[:file_cache_path]}/#{node[:xampp][:tarball]}"

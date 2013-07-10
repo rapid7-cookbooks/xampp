@@ -14,6 +14,6 @@ Vagrant.configure('2') do |config|
   config.vm.network :private_network, ip: '33.33.33.10'
 
   config.vm.provision :chef_solo do |chef|
-    chef.run_list = ['recipe[xampp::server]']
+    chef.run_list = ['recipe[xampp]']
   end
 end

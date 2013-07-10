@@ -31,10 +31,6 @@ if node[:kernel][:machine].eql?('x86_64')
   end
 end
 
-# TODO: This is a hack
-chef_gem 'highline'
-gem_package 'highline'
-
 version = File.read("#{node[:xampp][:dir]}/lampp/lib/VERSION").strip rescue nil
 
 tarball_path = "#{Chef::Config[:file_cache_path]}/#{node[:xampp][:tarball]}"
@@ -43,7 +39,7 @@ remote_file tarball_path do
   not_if { version.eql? node[:xampp][:version] }
 end
 
-directory node[:xampp][:dir] do
+directory "#{node[:xampp][:dir]}/xampp" do
   action :delete
   recursive true
   not_if { version.eql? node[:xampp][:version] }

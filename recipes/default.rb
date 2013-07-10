@@ -39,7 +39,7 @@ remote_file tarball_path do
   not_if { version.eql? node[:xampp][:version] }
 end
 
-directory "#{node[:xampp][:dir]}/xampp" do
+directory "#{node[:xampp][:dir]}/lampp" do
   action :delete
   recursive true
   not_if { version.eql? node[:xampp][:version] }

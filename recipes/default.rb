@@ -50,16 +50,17 @@ execute 'unarchive xampp' do
   not_if { version.eql? node[:xampp][:version] }
 end
 
+template "#{node[:xampp][:dir]}/lampp/etc/extra/httpd-xampp.conf" do
+  variables :security_policies => node[:xampp][:security_policies]
+end
+
 link '/etc/init.d/lampp' do
   to "#{node[:xampp][:dir]}/lampp/lampp"
 end
 
-# REVIEW: Is it necessary to change the perms on the lampp executable?
-# chmod +x /etc/init.d/lampp
-
 service 'xampp' do
   action [:enable, :start]
 
-  # NOTE: This is incorrect for windows.
+  # TODO: Add Windows/Mac support?
   service_name 'lampp'
 end

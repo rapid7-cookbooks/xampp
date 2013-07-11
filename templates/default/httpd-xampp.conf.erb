@@ -56,9 +56,9 @@ XBitHack on
 #
 # New XAMPP security concept
 #
-# Modified by the xampp::default Chef recipe. rapid7-cookbooks/xampp
+# Modified by the xampp::default Chef recipe (rapid7-cookbooks/xampp) last at: <%= Time.now %>
 #
-<LocationMatch "^/(?i:(?:xampp|security|licenses|phpmyadmin|webalizer|server-status|server-info))">
+<LocationMatch "^/(?i:(?:<%= @paths.join('|') if @paths.kind_of?(Array) && !@paths.empty? %>))">
 <% @security_policies.each do |policy| %>
   <%= policy %>
 <% end %>

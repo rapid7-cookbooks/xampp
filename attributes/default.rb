@@ -11,8 +11,7 @@ default[:xampp][:dir] = '/opt'
 default[:xampp][:version] = '1.8.1'
 default[:xampp][:url] = "http://www.apachefriends.org/download.php?xampp-linux-#{default[:xampp][:version]}.tar.gz"
 default[:xampp][:tarball] = "xampp-linux-#{default[:xampp][:version]}.tar.gz"
-
-# Enumerated and placed into the LocationMatch tags
+default[:xampp][:match_paths] = %w[xampp security licenses phpmyadmin webalizer server-status server-info]
 default[:xampp][:security_policies] =	[
                                         'Order deny,allow',
                                         'Deny from all',

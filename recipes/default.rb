@@ -51,7 +51,10 @@ execute 'unarchive xampp' do
 end
 
 template "#{node[:xampp][:dir]}/lampp/etc/extra/httpd-xampp.conf" do
-  variables :security_policies => node[:xampp][:security_policies]
+  variables({
+    :security_policies => node[:xampp][:security_policies],
+    :paths => node[:xampp][:match_paths]
+  })
 end
 
 link '/etc/init.d/lampp' do

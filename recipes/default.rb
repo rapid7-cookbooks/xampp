@@ -20,14 +20,12 @@ if node[:kernel][:machine].eql?('x86_64')
   when 'arch'
     package 'lib32-glibc'
     package 'gcc-libs-multilib'
-  when 'debian', 'rhel'
-    if platform? 'centos'
-      package('glibc') { arch 'i386' }
-      package('libstd') { arch 'i386' }
-      package('ld-linux.so.2')
-    else
-      package 'ia32-libs'
-    end
+  when 'debian'
+    package 'ia32-libs'
+  when 'rhel'
+    yum_package('glibc') { arch 'i386' }
+    yum_package('libstd') { arch 'i386' }
+    yum_package('ld-linux.so.2')
   end
 end
 

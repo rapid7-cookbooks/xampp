@@ -22,10 +22,6 @@ if node[:kernel][:machine].eql?('x86_64')
     package 'gcc-libs-multilib'
   when 'debian'
     package 'ia32-libs'
-  when 'rhel'
-    yum_package('glibc') { arch 'i386' }
-    yum_package('libstd') { arch 'i386' }
-    yum_package('ld-linux.so.2')
   end
 end
 
